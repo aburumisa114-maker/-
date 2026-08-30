@@ -1,6 +1,7 @@
 import 'calculator_screen.dart';
 import 'crops_screen.dart';
 import 'irrigation_guide_screen.dart';
+import 'login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,8 @@ class BabikerApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MainHomeScreen(),
+      // جعل شاشة تسجيل الدخول هي أول شاشة تظهر للمستخدم
+      home: const LoginScreen(),
     );
   }
 }
