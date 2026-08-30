@@ -1,5 +1,6 @@
 import 'calculator_screen.dart';
 import 'crops_screen.dart';
+import 'irrigation_guide_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -72,6 +73,22 @@ class MainHomeScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.calculate),
                 label: const Text('حاسبة التقاوي الزراعية', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[800],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const IrrigationGuideScreen()),
+                  );
+                },
+                icon: const Icon(Icons.water_drop),
+                label: const Text('مرشد الري والتسميد', style: TextStyle(fontSize: 16)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[800],
                   foregroundColor: Colors.white,
