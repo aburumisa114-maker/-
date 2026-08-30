@@ -1,122 +1,246 @@
-import 'calculator_screen.dart';
-import 'crops_screen.dart';
-import 'irrigation_guide_screen.dart';
-import 'login_screen.dart';
-import 'pests_screen.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
-void main() {
-  runApp(const BabikerApp());
-}
-
-class BabikerApp extends StatelessWidget {
-  const BabikerApp({super.key});
+class AreaCalculatorScreen extends StatefulWidget {
+  const AreaCalculatorScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'بابكر الباكر',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const LoginScreen(),
-    );
-  }
+  State<AreaCalculatorScreen> createState() => _AreaCalculatorScreenState();
 }
 
-class MainHomeScreen extends StatelessWidget {
-  const MainHomeScreen({super.key});
+enum ShapeType { rectangle, square, circle, triangle }
+
+class _AreaCalculatorScreenState extends State<AreaCalculatorScreen> {
+  ShapeType _selectedShape = ShapeType.rectangle;
+  
+  final TextEditingController _param1Controller = TextEditingController();
+  final TextEditingController _param2Controller = TextEditingController();
+  
+  double? _result;
+  String _errorMessage = '';
+
+  @override
+  void dispose() {
+    _param1Controller.dispose();
+    _param2Controller.dispose();
+    super.dispose();
+  }
+
+  void _calculateArea() {
+    setState(() {
+      _errorMessage = '';
+      _result = null;
+    });
+
+    final val1 = double.tryParse(_param1Controller.text);
+    final val2 = double.tryParse(_param2Controller.text);
+
+    if (val1 == null || val1 <= 0) {
+      setState(() {
+        _errorMessage = 'الرجاء إدخال رقم موجح صحيح للحقل الأول.';
+      });
+      return;
+    }
+
+    switch (_selectedShape) {
+      case ShapeType.rectangle:
+        if (val2 == null || val2 <= 0) {
+          setState(() {
+            _errorMessage = 'الرجاء إدخال رقم موجح صحيح للعرض.';
+          });
+          return;
+        }
+        setState(() {
+          _result = val1 * val2;
+        });
+        break;
+
+      case ShapeType.square:
+        setState(() {
+          _result = val1 * val1;
+        });
+        break;
+
+      case ShapeType.circle:
+        setState(() {
+          _result = math.pi * math.pow(val1, 2);
+        });
+        break;
+
+      case ShapeType.triangle:
+        if (val2 == null || val2 <= 0) {
+          setState(() {
+            _errorMessage = 'الرجاء إدخال رقم موجب صحيح للارتفاع.';
+          });
+          return;
+        }
+        setState(() {
+          _result = 0.5 * val1 * val2;
+        });
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('التطبيق الزراعي'),
-        backgroundColor: Colors.green[800],
+        title: const Text('حاسبة المساحات'),
+        centerTitle: true,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.agriculture, size: 80, color: Colors.green),
-              const SizedBox(height: 20),
-              const Text(
-                'مرحباً بك في التطبيق الزراعي المتكامل',
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'اختر الشكل الهندسي',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SegmentedButton<ShapeType>(
+                segments: const [
+                  ButtonSegment(
+                    value: ShapeType.rectangle,
+                    label: Text('مستطيل'),
+                    icon: Icon(Icons.crop_square),
+                  ),
+                  ButtonSegment(
+                    value: ShapeType.square,
+                    label: Text('مربع'),
+                    icon: Icon(Icons.square_outlined),
+                  ),
+                  ButtonSegment(
+                    value: ShapeType.circle,
+                    label: Text('دائرة'),
+                    icon: Icon(Icons.circle_outlined),
+                  ),
+                  ButtonSegment(
+                    value: ShapeType.triangle,
+                    label: Text('مثلث'),
+                    icon: Icon(Icons.change_history),
+                  ),
+                ],
+                selected: {_selectedShape},
+                onSelectionChanged: (Set<ShapeType> newSelection) {
+                  setState(() {
+                    _selectedShape = newSelection.first;
+                    _param1Controller.clear();
+                    _param2Controller.clear();
+                    _result = null;
+                    _errorMessage = '';
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 24),
+            ..._buildInputFields(),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _calculateArea,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: const Text('احسب المساحة', style: TextStyle(fontSize: 16)),
+            ),
+            if (_errorMessage.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text(
+                _errorMessage,
+                style: const TextStyle(color: Colors.red, fontSize: 14),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 30),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CropsScreen()),
-                  );
-                },
-                icon: const Icon(Icons.eco),
-                label: const Text('قائمة المحاصيل الحقلية', style: TextStyle(fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[800],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+            ],
+            if (_result != null) ...[
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ),
-              const SizedBox(height: 14),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CalculatorScreen()),
-                  );
-                },
-                icon: const Icon(Icons.calculate),
-                label: const Text('حاسبة التقاوي الزراعية', style: TextStyle(fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[800],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-              ),
-              const SizedBox(height: 14),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const IrrigationGuideScreen()),
-                  );
-                },
-                icon: const Icon(Icons.water_drop),
-                label: const Text('مرشد الري والتسميد', style: TextStyle(fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[800],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-              ),
-              const SizedBox(height: 14),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const PestsScreen()),
-                  );
-                },
-                icon: const Icon(Icons.bug_report),
-                label: const Text('تشخيص الآفات والمبيدات', style: TextStyle(fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[800],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Text(
+                  'المساحة: ${_result!.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ],
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildInputFields() {
+    switch (_selectedShape) {
+      case ShapeType.rectangle:
+        return [
+          TextField(
+            controller: _param1Controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'الطول',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _param2Controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'العرض',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ];
+      case ShapeType.square:
+        return [
+          TextField(
+            controller: _param1Controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'طول الضلع',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ];
+      case ShapeType.circle:
+        return [
+          TextField(
+            controller: _param1Controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'نصف القطر',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ];
+      case ShapeType.triangle:
+        return [
+          TextField(
+            controller: _param1Controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'القاعدة',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _param2Controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'الارتفاع',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ];
+    }
   }
 }
