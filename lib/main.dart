@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'حاسبة المساحات الزراعية',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        useMaterial3: true,
+      ),
+      home: const AreaCalculatorScreen(),
+    );
+  }
+}
+
 class AreaCalculatorScreen extends StatefulWidget {
   const AreaCalculatorScreen({super.key});
 
@@ -37,7 +59,7 @@ class _AreaCalculatorScreenState extends State<AreaCalculatorScreen> {
 
     if (val1 == null || val1 <= 0) {
       setState(() {
-        _errorMessage = 'الرجاء إدخال رقم موجح صحيح للحقل الأول.';
+        _errorMessage = 'الرجاء إدخال رقم موجب صحيح للحقل الأول.';
       });
       return;
     }
@@ -46,7 +68,7 @@ class _AreaCalculatorScreenState extends State<AreaCalculatorScreen> {
       case ShapeType.rectangle:
         if (val2 == null || val2 <= 0) {
           setState(() {
-            _errorMessage = 'الرجاء إدخال رقم موجح صحيح للعرض.';
+            _errorMessage = 'الرجاء إدخال رقم موجب صحيح للعرض.';
           });
           return;
         }
