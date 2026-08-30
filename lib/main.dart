@@ -2,6 +2,7 @@ import 'calculator_screen.dart';
 import 'crops_screen.dart';
 import 'irrigation_guide_screen.dart';
 import 'login_screen.dart';
+import 'pests_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,7 +20,6 @@ class BabikerApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      // جعل شاشة تسجيل الدخول هي أول شاشة تظهر للمستخدم
       home: const LoginScreen(),
     );
   }
@@ -36,7 +36,7 @@ class MainHomeScreen extends StatelessWidget {
         backgroundColor: Colors.green[800],
       ),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +49,7 @@ class MainHomeScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -65,7 +65,7 @@ class MainHomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -81,7 +81,7 @@ class MainHomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -91,6 +91,22 @@ class MainHomeScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.water_drop),
                 label: const Text('مرشد الري والتسميد', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[800],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+              const SizedBox(height: 14),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PestsScreen()),
+                  );
+                },
+                icon: const Icon(Icons.bug_report),
+                label: const Text('تشخيص الآفات والمبيدات', style: TextStyle(fontSize: 16)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[800],
                   foregroundColor: Colors.white,
