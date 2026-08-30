@@ -108,7 +108,7 @@ class HomeDashboardScreen extends StatelessWidget {
   }
 
   Widget _buildDashboardCard(
--    BuildContext context, {
+    BuildContext context, {
     required String title,
     required IconData icon,
     required Color color,
