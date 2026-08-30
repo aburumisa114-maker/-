@@ -1,3 +1,5 @@
+import 'calculator_screen.dart';
+import 'crops_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,52 +17,69 @@ class BabikerApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const SplashScreen(),
+      home: const MainHomeScreen(),
     );
   }
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class MainHomeScreen extends StatelessWidget {
+  const MainHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1B5E20),
+      appBar: AppBar(
+        title: const Text('التطبيق الزراعي'),
+        backgroundColor: Colors.green[800],
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Icon(Icons.agriculture, size: 80, color: Colors.green),
+              const SizedBox(height: 20),
+              const Text(
+                'مرحباً بك في التطبيق الزراعي المتكامل',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              child: const Icon(
-                Icons.agriculture,
-                size: 80,
-                color: Color(0xFF1B5E20),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CropsScreen()),
+                  );
+                },
+                icon: const Icon(Icons.eco),
+                label: const Text('قائمة المحاصيل الحقلية', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[800],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'تطبيق بابكر الباكر',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CalculatorScreen()),
+                  );
+                },
+                icon: const Icon(Icons.calculate),
+                label: const Text('حاسبة التقاوي الزراعية', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[800],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'مرشدك الزراعي وسوقك المباشر',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color(0xFFFFF59D),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
