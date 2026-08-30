@@ -29,6 +29,9 @@ jobs:
     - name: Install Dependencies
       run: flutter pub get
 
+    - name: Create Android Configuration
+      run: flutter create . --platforms=android --org com.example.app
+
     - name: Build APK
       run: flutter build apk --debug
 
