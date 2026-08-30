@@ -15,7 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     if (_formKey.currentState!.validate()) {
-      // الانتقال للواجهة الرئيسية وحذف شاشة تسجيل الدخول من التاريخ
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MainHomeScreen()),
@@ -97,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    const Text(
+                    child: const Text(
                       'دخول',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
