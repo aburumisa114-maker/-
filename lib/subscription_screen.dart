@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
-class SubscriptionScreen extends StatelessWidget {
+class SubscriptionScreen extends StatefulWidget {
+  @override
+  _SubscriptionScreenState createState() => _SubscriptionScreenState();
+}
+
+class _SubscriptionScreenState extends State<SubscriptionScreen> {
+  String selectedCurrency = 'SDG'; // العملة الافتراضية الجنيه السوداني
+
   @override
   Widget build(BuildContext context) {
+    // تحديد الأسعار بناءً على العملة المختارة
+    String priceDisplay = selectedCurrency == 'SDG' ? '25,000 ج.س / شهرياً' : '\$15 / شهرياً';
+
     return Scaffold(
       appBar: AppBar(
         title: Text('باقات الاشتراك الزراعية'),
@@ -13,6 +23,35 @@ class SubscriptionScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // زر تبديل العملة
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('اختر العملة: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ChoiceChip(
+                  label: Text('الجنيه السوداني (SDG)'),
+                  selected: selectedCurrency == 'SDG',
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedCurrency = 'SDG';
+                    });
+                  },
+                  selectedColor: Colors.green.shade200,
+                ),
+                SizedBox(width: 10),
+                ChoiceChip(
+                  label: Text('الدولار (\$ USD)'),
+                  selected: selectedCurrency == 'USD',
+                  onSelected: (selected) {
+                    setState(() {
+                      selectedCurrency = 'USD';
+                    });
+                  },
+                  selectedColor: Colors.green.shade200,
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -64,7 +103,7 @@ class SubscriptionScreen extends StatelessWidget {
             _buildPricingCard(
               context,
               title: 'الباقة الزراعية المتقدمة (VIP)',
-              price: '\$15 / شهرياً',
+              price: priceDisplay,
               features: [
                 'تشخيص غير محدود للآفات والأمراض عبر الصور',
                 'توصيات فورية بالمادة الفعالة والتدخل السريع',
@@ -74,7 +113,7 @@ class SubscriptionScreen extends StatelessWidget {
               buttonText: 'اشترك الآن',
               isPopular: true,
               onPressed: () {
-                _showPaymentDialog(context);
+                _showPaymentDialog(context, selectedCurrency);
               },
             ),
           ],
@@ -126,7 +165,7 @@ class SubscriptionScreen extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               price,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.teal[800]),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.teal[800]),
             ),
             Divider(height: 24),
             ...features.map((feature) => Padding(
@@ -158,12 +197,42 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  void _showPaymentDialog(BuildContext context) {
+  void _showPaymentDialog(BuildContext context, String currency) {
+    // يمكنك تعديل أرقام الحسابات أدناه لتناسب حساباتك البنكية أو تطبيق بنكك
+    String bankDetails = currency == 'SDG'
+        ? 'بنك الخرطوم (تطبيق بنكك):\nرقم الحساب: 1234567\nاسم الحساب: بابكر إبراهيم\n\nأو تحويل عبر تطبيقك المحلي ونسخ إيصال الدفع.'
+        : 'حساب الدولار الدولي:\nPayPal / SWIFT Code:\nBKSDNXXX\nرقم الحساب: US987654321';
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text('تفعيل الاشتراك المتقدم'),
-        content: Text('اختر وسيلة الدفع المناسبة لتفعيل باقة المشتركين المميزين فوراً وفتح كافة الميزات الذكية.'),
+        title: Text('تفاصيل الدفع والتحويل (${currency == 'SDG' ? 'بالجنيه السوداني' : 'بالدولار'})'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('الرجاء التحويل إلى الحساب أدناه:', style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Text(bankDetails, style: TextStyle(fontSize: 14, height: 1.5)),
+              ),
+              SizedBox(height: 15),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'أدخل رقم إيصال التحويل أو مرجع العملية',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
@@ -173,11 +242,11 @@ class SubscriptionScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pop(dialogContext);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('تم تفعيل الباقة بنجاح! شكراً لاشتراكك.')),
+                SnackBar(content: Text('تم إرسال طلب الاشتراك بنجاح! سيتم تفعيله بعد مراجعة التحويل.')),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: Text('تأكيد الدفع'),
+            child: Text('تأكيد وإرسال الإيصال'),
           ),
         ],
       ),
