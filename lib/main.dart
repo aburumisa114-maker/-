@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'pest_diagnosis_screen.dart';
 import 'subscription_screen.dart';
+import 'area_calculator_screen.dart';
+import 'crops_screen.dart';
+import 'irrigation_guide_screen.dart';
 
 void main() {
   runApp(BabikerAgriculturalApp());
@@ -53,39 +56,49 @@ class AgriculturalDashboardScreen extends StatelessWidget {
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
           children: [
+            // 1. زر حاسبة المساحات (مربوط بملفه الأصلي)
             _buildDashboardCard(
               context,
               title: 'حاسبة المساحات',
               icon: Icons.calculate,
               iconColor: Colors.blue,
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('قريباً: ميزة حاسبة المساحات')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AreaCalculatorScreen()),
                 );
               },
             ),
+
+            // 2. زر المحاصيل (مربوط بملفه الأصلي)
             _buildDashboardCard(
               context,
               title: 'المحاصيل',
               icon: Icons.eco,
               iconColor: Colors.green,
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('قريباً: قسم المحاصيل')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CropsScreen()),
                 );
               },
             ),
+
+            // 3. زر دليل الري (مربوط بملفه الأصلي)
             _buildDashboardCard(
               context,
               title: 'دليل الري',
               icon: Icons.water_drop,
               iconColor: Colors.teal,
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('قريباً: دليل الري وإدارة المياه')),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IrrigationGuideScreen()),
                 );
               },
             ),
+
+            // 4. زر الآفات والأمراض (مربوط بشاشة التشخيص الذكي)
             _buildDashboardCard(
               context,
               title: 'الآفات والأمراض',
