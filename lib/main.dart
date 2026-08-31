@@ -1,167 +1,66 @@
 import 'package:flutter/material.dart';
-import 'pest_diagnosis_screen.dart';
-import 'subscription_screen.dart';
-import 'area_calculator_screen.dart';
-import 'crops_screen.dart';
-import 'irrigation_guide_screen.dart';
+import 'satellite_screen.dart'; // استيراد شاشة مراقبة الأقمار الصناعية
 
 void main() {
-  runApp(BabikerAgriculturalApp());
+  runApp(AgriculturalApp());
 }
 
-class BabikerAgriculturalApp extends StatelessWidget {
+class AgriculturalApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'لوحة التحكم الزراعية',
+      title: 'تطبيق إدارة الحقول الزراعية',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Color(0xFFF5F9F6),
+        useMaterial3: true,
       ),
-      home: AgriculturalDashboardScreen(),
+      home: MainMenuScreen(),
     );
   }
 }
 
-class AgriculturalDashboardScreen extends StatelessWidget {
+class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'لوحة التحكم الزراعية',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        title: Text('النظام الزراعي الذكي'),
         backgroundColor: Colors.green[700],
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.workspace_premium, color: Colors.amber),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SubscriptionScreen()),
-              );
-            },
-            tooltip: 'الباقات والاشتراكات',
-          ),
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          children: [
-            // 1. زر حاسبة المساحات (مربوط بملفه الأصلي)
-            _buildDashboardCard(
-              context,
-              title: 'حاسبة المساحات',
-              icon: Icons.calculate,
-              iconColor: Colors.blue,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AreaCalculatorScreen()),
-                );
-              },
-            ),
-
-            // 2. زر المحاصيل (مربوط بملفه الأصلي)
-            _buildDashboardCard(
-              context,
-              title: 'المحاصيل',
-              icon: Icons.eco,
-              iconColor: Colors.green,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CropsScreen()),
-                );
-              },
-            ),
-
-            // 3. زر دليل الري (مربوط بملفه الأصلي)
-            _buildDashboardCard(
-              context,
-              title: 'دليل الري',
-              icon: Icons.water_drop,
-              iconColor: Colors.teal,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => IrrigationGuideScreen()),
-                );
-              },
-            ),
-
-            // 4. زر الآفات والأمراض (مربوط بشاشة التشخيص الذكي)
-            _buildDashboardCard(
-              context,
-              title: 'الآفات والأمراض',
-              icon: Icons.bug_report,
-              iconColor: Colors.orange,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PestDiagnosisScreen()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDashboardCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Color iconColor,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-          border: Border.all(color: Colors.green.shade100, width: 1),
-        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, size: 36, color: iconColor),
-            ),
-            SizedBox(height: 12),
             Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
+              'الخدمات والتحليلات الزراعية',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green[900]),
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 20),
+            
+            // زر الانتقال إلى شاشة الأقمار الصناعية
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SatelliteMonitoringScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal[700],
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: Icon(Icons.satellite_alt, color: Colors.white, size: 28),
+              label: Text(
+                'مراقبة الأقمار الصناعية والحقول',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+            
+            // يمكنك إضافة أزرار الأقسام الأخرى هنا تباعاً
           ],
         ),
       ),
