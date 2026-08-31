@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
-import 'subscription_screen.dart';
-import 'crops_screen.dart'; // تأكد من استبدالها باسم شاشة الخدمات الرئيسية إذا كانت مختلفة لديك
 
 void main() {
   runApp(const SmartAgriApp());
@@ -19,38 +16,48 @@ class SmartAgriApp extends StatelessWidget {
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: const Color(0xFFF9F6F0),
       ),
-      // نقطة البداية تبدأ بشاشة تسجيل الدخول
-      home: const LoginScreenWrapper(),
+      home: const SubscriptionScreen(),
     );
   }
 }
 
-// نموذج لفحص حالة المستخدم والاشتراك عند الدخول
-class LoginScreenWrapper extends StatefulWidget {
-  const LoginScreenWrapper({Key? key}) : super(key: key);
-
-  @override
-  State<LoginScreenWrapper> createState() => _LoginScreenWrapperState();
-}
-
-class _LoginScreenWrapperState extends State<LoginScreenWrapper> {
-  // متغيرات تجريبية للحالة (يمكن ربطها بقاعدة البيانات لاحقاً مثل Firebase)
-  final bool isLoggedIn = true;     // هل المستخدم مسجل دخول؟
-  final bool isSubscribed = false;  // هل قام بالدفع وتم تفعيل حسابه؟ (اجعلها true إذا كان مشتركاً)
+class SubscriptionScreen extends StatelessWidget {
+  const SubscriptionScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // 1. إذا لم يكن مسجل دخول، تظهر له شاشة تسجيل الدخول الأصلية
-    if (!isLoggedIn) {
-      return const LoginScreen(); 
-    } 
-    
-    // 2. إذا مسجل دخول ولكن لم يدفع / لم يفعل اشتراكه، يُوجه لشاشة الدفع وأرقام الحسابات
-    if (!isSubscribed) {
-      return const SubscriptionScreen();
-    } 
-    
-    // 3. إذا سجل الدفع وتم تفعيل حسابه، يدخل مباشرة للخدمات الكاملة للتطبيق
-    return const CropsScreen();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('النظام الزراعي الذكي - حلفا الجديدة'),
+        backgroundColor: Colors.green[800],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.payment, size: 80, color: Colors.orange),
+            const SizedBox(height: 20),
+            const Text(
+              'بيانات الاشتراك والدفع',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'للحصول على النسخة الكاملة وتفعيل الحساب:\n• بنك الخرطوم: رقم الحساب [أدخل الرقم هنا]\n• تطبيق بركة / تطبيق صرافة: [أدخل التفاصيل هنا]',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () {},
+              icon: const Icon(Icons.chat),
+              label: const Text('التواصل عبر الواتساب للدعم'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
