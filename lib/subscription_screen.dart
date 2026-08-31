@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // مكتبة فتح الواتساب
 
 class SubscriptionScreen extends StatefulWidget {
   @override
@@ -7,10 +8,35 @@ class SubscriptionScreen extends StatefulWidget {
 
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   String selectedCurrency = 'SDG'; // العملة الافتراضية الجنيه السوداني
+  final TextEditingController _receiptController = TextEditingController();
+
+  // رقم الواتساب الخاص بك مع رمز الدولة السودانية (249)
+  final String ownerWhatsAppNumber = '249913846556'; 
+
+  @override
+  void dispose() {
+    _receiptController.dispose();
+    super.dispose();
+  }
+
+  // دالة فتح الواتساب برساْلَة جاهزة تتضمن رقم الإيصال
+  Future<void> _sendWhatsAppMessage(String receiptNo) async {
+    String message = Uri.encodeComponent(
+        'السلام عليكم، أرغب في تفعيل باقة الاشتراك الزراعية VIP.\nرقم إيصال التحويل الخاص بي هو: $receiptNo\nرقم الحساب المحول إليه: 4613079');
+    
+    final Uri whatsappUri = Uri.parse('https://wa.me/$ownerWhatsAppNumber?text=$message');
+    
+    if (await canLaunchUrl(whatsappUri)) {
+      await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('تعذر فتح تطبيق واتساب، تأكد من تثبيته على هاتفك')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // تحديد الأسعار بناءً على العملة المختارة
     String priceDisplay = selectedCurrency == 'SDG' ? '25,000 ج.س / شهرياً' : '\$15 / شهرياً';
 
     return Scaffold(
@@ -198,9 +224,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   void _showPaymentDialog(BuildContext context, String currency) {
-    // تم تحديث رقم الحساب برقمك الحقيقي: 4613079
     String bankDetails = currency == 'SDG'
-        ? 'بنك الخرطوم (تطبيق بنكك):\nرقم الحساب: 4613079\nاسم الحساب: بابكر إبراهيم محمد أحمد\n\nأو تحويل عبر تطبيقك المحلي ونسخ إيصال الدفع.'
+        ? 'بنك الخرطوم (تطبيق بنكك):\nرقم الحساب: 4613079\nاسم الحساب: بابكر إبراهيم محمد أحمد\n\nقم بالتحويل ثم أدخل رقم الإيصال أدناه.'
         : 'حساب الدولار الدولي:\nرقم الحساب: 4613079 (USD)\nاسم الحساب: بابكر إبراهيم محمد أحمد';
 
     showDialog(
@@ -225,6 +250,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               ),
               SizedBox(height: 15),
               TextField(
+                controller: _receiptController,
                 decoration: InputDecoration(
                   labelText: 'أدخل رقم إيصال التحويل أو مرجع العملية',
                   border: OutlineInputBorder(),
@@ -238,15 +264,23 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text('إلغاء'),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: () {
+              if (_receiptController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('الرجاء إدخال رقم إيصال التحويل أولاً')),
+                );
+                return;
+              }
+              String receipt = _receiptController.text;
               Navigator.pop(dialogContext);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('تم إرسال طلب الاشتراك بنجاح! سيتم تفعيله بعد مراجعة التحويل.')),
-              );
+              
+              // فتح الواتساب الخاص بك برسالة جاهزة
+              _sendWhatsAppMessage(receipt);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: Text('تأكيد وإرسال الإيصال'),
+            icon: Icon(Icons.chat, color: Colors.white),
+            label: Text('إرسال عبر الواتساب', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
