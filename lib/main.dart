@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'satellite_screen.dart'; // استيراد شاشة مراقبة الأقمار الصناعية
+import 'satellite_screen.dart'; // استيراد شاشة الأقمار الصناعية
 
 void main() {
   runApp(AgriculturalApp());
@@ -10,7 +10,7 @@ class AgriculturalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'تطبيق إدارة الحقول الزراعية',
+      title: 'النظام الزراعي الذكي',
       theme: ThemeData(
         primarySwatch: Colors.green,
         useMaterial3: true,
@@ -25,22 +25,21 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('النظام الزراعي الذكي'),
+        title: Text('النظام الزراعي الذكي - حلفا الجديدة'),
         backgroundColor: Colors.green[700],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: ListView(
           children: [
             Text(
-              'الخدمات والتحليلات الزراعية',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green[900]),
+              'الخدمات والتحليلات الزراعية المتقدمة',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green[900]),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
             
-            // زر الانتقال إلى شاشة الأقمار الصناعية
+            // زر مراقبة الأقمار الصناعية
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -50,17 +49,15 @@ class MainMenuScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal[700],
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              icon: Icon(Icons.satellite_alt, color: Colors.white, size: 28),
+              icon: Icon(Icons.satellite_alt, color: Colors.white, size: 26),
               label: Text(
                 'مراقبة الأقمار الصناعية والحقول',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
-            
-            // يمكنك إضافة أزرار الأقسام الأخرى هنا تباعاً
           ],
         ),
       ),
