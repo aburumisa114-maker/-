@@ -1,103 +1,98 @@
 import 'package:flutter/material.dart';
-import 'area_calculator_screen.dart';
-import 'crops_screen.dart';
-import 'irrigation_guide_screen.dart';
-import 'pests_screen.dart';
+import 'pest_diagnosis_screen.dart'; // استيراد شاشة التشخيص الذكي
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const AgriculturalApp());
+  runApp(BabikerAgriculturalApp());
 }
 
-class AgriculturalApp extends StatelessWidget {
-  const AgriculturalApp({super.key});
-
+class BabikerAgriculturalApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'التطبيق الزراعي',
+      title: 'لوحة التحكم الزراعية',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Color(0xFFF5F9F6),
       ),
-      home: const HomeDashboardScreen(),
+      home: AgriculturalDashboardScreen(),
     );
   }
 }
 
-class HomeDashboardScreen extends StatelessWidget {
-  const HomeDashboardScreen({super.key});
-
+class AgriculturalDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('لوحة التحكم الزراعية'),
+        title: Text(
+          'لوحة التحكم الزراعية',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Colors.green[700],
         centerTitle: true,
-        backgroundColor: Colors.green.shade700,
-        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: GridView.count(
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
           children: [
+            // 1. زر حاسبة المساحات
             _buildDashboardCard(
               context,
               title: 'حاسبة المساحات',
               icon: Icons.calculate,
-              color: Colors.blue.shade700,
+              iconColor: Colors.blue,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AreaCalculatorScreen(),
-                  ),
+                // يمكنك إضافة شاشة حاسبة المساحات هنا لاحقاً
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('قريباً: ميزة حاسبة المساحات')),
                 );
               },
             ),
+
+            // 2. زر المحاصيل
             _buildDashboardCard(
               context,
               title: 'المحاصيل',
-              icon: Icons.grass,
-              color: Colors.green.shade700,
+              icon: Icons.eco,
+              iconColor: Colors.green,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CropsScreen(),
-                  ),
+                // يمكنك إضافة شاشة المحاصيل هنا لاحقاً
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('قريباً: قسم المحاصيل')),
                 );
               },
             ),
+
+            // 3. زر دليل الري
             _buildDashboardCard(
               context,
               title: 'دليل الري',
               icon: Icons.water_drop,
-              color: Colors.cyan.shade700,
+              iconColor: Colors.teal,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const IrrigationGuideScreen(),
-                  ),
+                // يمكنك إضافة شاشة دليل الري هنا لاحقاً
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('قريباً: دليل الري')),
                 );
               },
             ),
+
+            // 4. زر الآفات والأمراض (المربوط بـ التشخيص الذكي)
             _buildDashboardCard(
               context,
               title: 'الآفات والأمراض',
               icon: Icons.bug_report,
-              color: Colors.orange.shade800,
+              iconColor: Colors.orange,
               onTap: () {
+                // الانتقال إلى شاشة التشخيص الذكي عند الضغط
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const PestsScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => PestDiagnosisScreen()),
                 );
               },
             ),
@@ -107,40 +102,53 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
+  // دالة مساعدة لتصميم بطاقات لوحة التحكم بشكل أنيق
   Widget _buildDashboardCard(
     BuildContext context, {
     required String title,
     required IconData icon,
-    required Color color,
+    required Color iconColor,
     required VoidCallback onTap,
   }) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: color.withOpacity(0.1),
-                child: Icon(icon, size: 32, color: color),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+          border: Border.all(color: Colors.green.shade100, width: 1),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.1),
+                shape: BoxShape.circle,
               ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+              child: Icon(icon, size: 36, color: iconColor),
+            ),
+            SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
               ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
