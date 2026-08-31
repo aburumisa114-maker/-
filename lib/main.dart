@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'pest_diagnosis_screen.dart'; // استيراد شاشة التشخيص الذكي
+import 'pest_diagnosis_screen.dart';
+import 'subscription_screen.dart';
 
 void main() {
   runApp(BabikerAgriculturalApp());
@@ -32,6 +33,18 @@ class AgriculturalDashboardScreen extends StatelessWidget {
         backgroundColor: Colors.green[700],
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.workspace_premium, color: Colors.amber),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SubscriptionScreen()),
+              );
+            },
+            tooltip: 'الباقات والاشتراكات',
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -40,56 +53,45 @@ class AgriculturalDashboardScreen extends StatelessWidget {
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
           children: [
-            // 1. زر حاسبة المساحات
             _buildDashboardCard(
               context,
               title: 'حاسبة المساحات',
               icon: Icons.calculate,
               iconColor: Colors.blue,
               onTap: () {
-                // يمكنك إضافة شاشة حاسبة المساحات هنا لاحقاً
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('قريباً: ميزة حاسبة المساحات')),
                 );
               },
             ),
-
-            // 2. زر المحاصيل
             _buildDashboardCard(
               context,
               title: 'المحاصيل',
               icon: Icons.eco,
               iconColor: Colors.green,
               onTap: () {
-                // يمكنك إضافة شاشة المحاصيل هنا لاحقاً
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('قريباً: قسم المحاصيل')),
                 );
               },
             ),
-
-            // 3. زر دليل الري
             _buildDashboardCard(
               context,
               title: 'دليل الري',
               icon: Icons.water_drop,
               iconColor: Colors.teal,
               onTap: () {
-                // يمكنك إضافة شاشة دليل الري هنا لاحقاً
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('قريباً: دليل الري')),
+                  SnackBar(content: Text('قريباً: دليل الري وإدارة المياه')),
                 );
               },
             ),
-
-            // 4. زر الآفات والأمراض (المربوط بـ التشخيص الذكي)
             _buildDashboardCard(
               context,
               title: 'الآفات والأمراض',
               icon: Icons.bug_report,
               iconColor: Colors.orange,
               onTap: () {
-                // الانتقال إلى شاشة التشخيص الذكي عند الضغط
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PestDiagnosisScreen()),
@@ -102,7 +104,6 @@ class AgriculturalDashboardScreen extends StatelessWidget {
     );
   }
 
-  // دالة مساعدة لتصميم بطاقات لوحة التحكم بشكل أنيق
   Widget _buildDashboardCard(
     BuildContext context, {
     required String title,
