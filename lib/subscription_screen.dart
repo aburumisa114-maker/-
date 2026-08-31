@@ -13,7 +13,6 @@ class SubscriptionScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // العنوان الترويجي
             Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -44,8 +43,6 @@ class SubscriptionScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-
-            // الباقة الأولى: الباقة المجانية
             _buildPricingCard(
               context,
               title: 'الباقة الأساسية (المجانية)',
@@ -64,8 +61,6 @@ class SubscriptionScreen extends StatelessWidget {
               },
             ),
             SizedBox(height: 16),
-
-            // الباقة الثانية: الباقة المميزة VIP
             _buildPricingCard(
               context,
               title: 'الباقة الزراعية المتقدمة (VIP)',
@@ -88,7 +83,6 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // دالة لتصميم بطاقة الباقة
   Widget _buildPricingCard(
     BuildContext context, {
     required String title,
@@ -164,22 +158,20 @@ class SubscriptionScreen extends StatelessWidget {
     );
   }
 
-  // نافذة إتمام الدفع أو تفعيل الاشتراك التجريبي
   void _showPaymentDialog(BuildContext context) {
     showDialog(
-      context: DialogContextHelper.context ?? context,
-      builder: (context) => AlertDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
         title: Text('تفعيل الاشتراك المتقدم'),
         content: Text('اختر وسيلة الدفع المناسبة لتفعيل باقة المشتركين المميزين فوراً وفتح كافة الميزات الذكية.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text('إلغاء'),
           ),
           ElevatedButton(
-            onHeadingClick: () {},
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('تم تفعيل الباقة بنجاح! شكراً لاشتراكك.')),
               );
@@ -191,8 +183,4 @@ class SubscriptionScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class DialogContextHelper {
-  static BuildContext? context;
 }
