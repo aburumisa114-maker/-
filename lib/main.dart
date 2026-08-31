@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'satellite_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(AgriculturalApp());
@@ -21,6 +22,14 @@ class AgriculturalApp extends StatelessWidget {
 }
 
 class MainMenuScreen extends StatelessWidget {
+  // دالة لفتح الواتساب أو الروابط الخارجية
+  Future<void> _launchWhatsApp() async {
+    final Uri whatsappUrl = Uri.parse('https://wa.me/+249000000000?text=السلام%20عليكم،%20أريد%20الاستفسار%20عن%20اشتراك%20النظام%20الزراعي');
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +48,7 @@ class MainMenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             
-            // 1. زر مراقبة الأقمار الصناعية
+            // 1. مراقبة الأقمار الصناعية
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -60,10 +69,9 @@ class MainMenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 12),
 
-            // 2. زر حاسبة المساحات الزراعية
+            // 2. حاسبة المساحات والتقاوي
             ElevatedButton.icon(
               onPressed: () {
-                // سيتم توجيهه لحاسبة المساحات إذا كانت موجودة لديك، أو إشعار
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('قسم حاسبة المساحات قيد التفعيل')),
                 );
@@ -81,7 +89,7 @@ class MainMenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 12),
 
-            // 3. زر توصيات الري
+            // 3. إدارة الري والمياه
             ElevatedButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -101,7 +109,7 @@ class MainMenuScreen extends StatelessWidget {
             ),
             SizedBox(height: 12),
 
-            // 4. زر تشخيص الآفات الزراعية
+            // 4. تشخيص الآفات والأمراض
             ElevatedButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -116,6 +124,66 @@ class MainMenuScreen extends StatelessWidget {
               icon: Icon(Icons.bug_report, color: Colors.white, size: 26),
               label: Text(
                 'تشخيص الآفات والأمراض النباتية',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 24),
+
+            Divider(thickness: 2, color: Colors.green[200]),
+            SizedBox(height: 12),
+
+            // 5. زر الاشتراك، الدفع، وأرقام الحسابات
+            ElevatedButton.icon(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('بيانات الاشتراك والدفع'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('💳 للحصول على النسخة الكاملة وتفعيل الحساب:'),
+                        SizedBox(height: 8),
+                        Text('• بنك الخرطوم (بنكك): رقم الحساب [أدخل الرقم هنا]'),
+                        Text('• تطبيق بركة / تطبيق صرافة: [أدخل التفاصيل هنا]'),
+                        SizedBox(height: 12),
+                        Text('📞 يرجى إرسال إيصال التحويل عبر الواتساب لتأكيد التفعيل.'),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('إغلاق'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange[800],
+                padding: EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: Icon(Icons.payment, color: Colors.white, size: 26),
+              label: Text(
+                'الاشتراك، الدفع وأرقام الحسابات',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 12),
+
+            // 6. زر التواصل عبر الواتساب
+            ElevatedButton.icon(
+              onPressed: _launchWhatsApp,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[800],
+                padding: EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              icon: Icon(Icons.chat, color: Colors.white, size: 26),
+              label: Text(
+                'التواصل عبر الواتساب للدعم',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
